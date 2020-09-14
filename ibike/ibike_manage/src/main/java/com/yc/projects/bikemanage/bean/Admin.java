@@ -12,10 +12,15 @@ public class Admin implements Serializable {
 	private String sex;
 	private String type;
 	private String name;
+	private String salt;
 	private String password;
-	
-
-	
+		
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	public String getId() {
 		return id;
 	}

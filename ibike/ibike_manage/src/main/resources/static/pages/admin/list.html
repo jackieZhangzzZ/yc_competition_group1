@@ -42,8 +42,9 @@
 					<div class="formControls col-xs-8 col-sm-9" style="width: 30%;">
 						<span class="select-box"> <select class="select" size="1"
 							name="type" id="type">
-								<option value="超级管理员">超级管理员</option>
+								<option value="超管">超管</option>
 								<option value="维修人员">维修人员</option>
+								<option value="用户管理人员">用户管理人员</option>
 						</select>
 						</span>
 					</div>
@@ -226,7 +227,7 @@
 			$.post("../../back/searchAdmin", {
 				pageNum : 1,
 				pageSize : 10,
-				type : '超级管理员',
+				type : '超管',
 				sex : '男'
 			}, function(data) {
 				vm.rows.splice(0);

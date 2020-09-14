@@ -44,7 +44,7 @@ public class MyRealm extends AuthorizingRealm {
 		if(admin==null){
 			return null;
 		}else{
-			ByteSource bsSalt = new SimpleByteSource(admin.getPassword());
+			ByteSource bsSalt = new SimpleByteSource(admin.getSalt());
 			SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(admin,admin.getPassword(),bsSalt,getName());
 			return authenticationInfo;
 		}

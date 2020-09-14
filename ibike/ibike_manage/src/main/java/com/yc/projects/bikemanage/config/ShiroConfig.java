@@ -56,7 +56,7 @@ public class ShiroConfig {
 	public Realm myRealm(){
 		MyRealm myRealm = new MyRealm();
 		//告诉realm密码的匹配方式
-		//myRealm.setCredentialsMatcher(credentialsMatcher());
+		myRealm.setCredentialsMatcher(credentialsMatcher());
 		return myRealm;
 	}
 	
@@ -64,7 +64,7 @@ public class ShiroConfig {
 	public CredentialsMatcher credentialsMatcher(){
 		HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
 		credentialsMatcher.setHashAlgorithmName("md5");
-		//credentialsMatcher.setHashIterations(1);
+		credentialsMatcher.setHashIterations(1);
 		return credentialsMatcher;
 	}
 	//开启aop 前置通知

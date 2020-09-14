@@ -67,11 +67,12 @@ public class AppTest extends TestCase {
 	@Test
 	public void testAddAdmin() {
 		Admin admin = new Admin();
-		admin.setName("rcw");
-		/*String password = "a";
+		admin.setName("容创伟");
+		String password = "a";
 		String salt = RandomStringUtils.randomNumeric(6,8);
-		Md5Hash md5Hash = new Md5Hash(password,salt);*/
-		admin.setPassword("123");
+		admin.setSalt(salt);
+		Md5Hash md5Hash = new Md5Hash(password,salt);
+		admin.setPassword(md5Hash.toString());
 		admin.setType("用户管理人员");
 		adminManageService.addAdmin(admin);
 	}

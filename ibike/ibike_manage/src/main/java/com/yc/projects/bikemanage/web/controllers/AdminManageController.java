@@ -9,11 +9,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
@@ -39,6 +41,11 @@ public class AdminManageController {
 	@ResponseBody
 	public JsonModel addUser(JsonModel jm, Admin admin) {
 		try {
+			String password = admin.getPassword();
+			String salt = RandomStringUtils.randomNumeric(6,8);
+			admin.setSalt(salt);
+			Md5Hash md5Hash = new Md5Hash(password,salt);
+			admin.setPassword(md5Hash.toString());
 			if (admin.getName() != null && !"".equals(admin.getName()) && admin.getPassword() != null
 					&& !"".equals(admin.getPassword()) && admin.getSex() != null && !"".equals(admin.getSex())
 					&& admin.getType() != null && !"".equals(admin.getType())) {
