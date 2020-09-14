@@ -19,6 +19,12 @@ public class AccessLogAnalysisController {
 	@Autowired
 	private AccessLogAnalysisService accessLogAnalysisService;
 
+
+	@RequestMapping("/*")
+	public String index(){
+		return "/pages/index.html";
+	}
+
 	@RequestMapping("/back/findAllAccessLog")
 	@ResponseBody
 	public JsonModel findAllAccessLog(AccessLog accessLog, Integer pageNum, Integer pageSize, JsonModel jm) {

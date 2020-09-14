@@ -1,8 +1,11 @@
 package com.yc.projects.bikemanage.bean;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
+@Document(collection = "bike")
 public class Bike implements Serializable {
 
 	private static final long serialVersionUID = 1L;

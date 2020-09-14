@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Sep 13 17:08:38 GMT+08:00 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0174-86b9-165c-0000029196e0 
+on database directory memory:D:\IDEA\ycProject\ibikes\ibike\ibike_manage\testdb with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@15db9742 
+Loaded from file:/F:/MavenRepository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=14.0.2+12-46
+user.dir=D:\IDEA\ycProject\ibikes\ibike\ibike_manage
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

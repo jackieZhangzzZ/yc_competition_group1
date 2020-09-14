@@ -2,15 +2,19 @@ package com.yc.projects.yc74ibike.bean;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
+@TableName("user")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -4588550926501395260L;
-
+	@TableId(value = "uid", type = IdType.AUTO)
 	private Integer status;
 	@Indexed(unique = true)
 	private String phoneNum;

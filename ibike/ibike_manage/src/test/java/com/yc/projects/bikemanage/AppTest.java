@@ -1,13 +1,13 @@
 package com.yc.projects.bikemanage;
 
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.sql.DataSource;
-
+import com.yc.projects.bikemanage.bean.*;
+import com.yc.projects.bikemanage.config.AppConfig;
+import com.yc.projects.bikemanage.dao.AccessLogAnalysisDao;
+import com.yc.projects.bikemanage.service.AccessLogAnalysisService;
+import com.yc.projects.bikemanage.service.AdminManageService;
+import com.yc.projects.bikemanage.service.BikeManageService;
+import com.yc.projects.bikemanage.service.UserManageService;
+import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +18,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.yc.projects.bikemanage.bean.AccessLog;
-import com.yc.projects.bikemanage.bean.Admin;
-import com.yc.projects.bikemanage.bean.Bike;
-import com.yc.projects.bikemanage.bean.QueryObject;
-import com.yc.projects.bikemanage.bean.User;
-import com.yc.projects.bikemanage.config.AppConfig;
-import com.yc.projects.bikemanage.dao.AccessLogAnalysisDao;
-import com.yc.projects.bikemanage.dao.UserDao;
-import com.yc.projects.bikemanage.service.AccessLogAnalysisService;
-import com.yc.projects.bikemanage.service.AdminManageService;
-import com.yc.projects.bikemanage.service.BikeManageService;
-import com.yc.projects.bikemanage.service.UserManageService;
-
-import junit.framework.TestCase;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Unit test for simple App.
@@ -40,7 +32,10 @@ import junit.framework.TestCase;
 @ContextConfiguration(classes = { AppConfig.class })
 public class AppTest extends TestCase {
 
-
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private DataSource dataSource;
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@SuppressWarnings("rawtypes")
@@ -58,16 +53,6 @@ public class AppTest extends TestCase {
 	private AccessLogAnalysisDao accessLogAnalysisDao;
 	@Autowired
 	private AccessLogAnalysisService accessLogAnalysisService;
-	@Autowired
-	private UserDao userDao;
-
-	@Test
-	public void testAddAdmin() {
-		Admin admin = new Admin();
-		admin.setName("肖理达");
-		admin.setPassword("123456");
-		adminManageService.addAdmin(admin);
-	}
 
 	@Test
 	public void testFindPVUV() {
@@ -126,7 +111,7 @@ public class AppTest extends TestCase {
 			if (user.getStatus() >= 2) {
 				user.setDeposit(299.0);
 			}
-			userDao.addUser(user);
+			userManageService.addUser(user);
 		}
 	}
 
@@ -135,14 +120,14 @@ public class AppTest extends TestCase {
 		User user = new User();
 		user.setOpenId("o1FsG5pbE-d5K8qzZ77mO2KW99Ok");
 		user.setName("肖理达");
-		boolean b = userDao.updateUser(user);
+		boolean b = userManageService.updateUser(user);
 		System.out.println(b);
 	}
 
 	@Test
 	public void testSearchUser() {
 		User user = new User();
-		user.setName("肖");
+		user.setName("今");
 		Object list = userManageService.searchUser(user, 1, 20).get("list");
 		System.out.println(list);
 	}
@@ -189,7 +174,7 @@ public class AppTest extends TestCase {
 				b.setStatus(1);
 				b.setLoc(loc);
 				b.setQrcode("");
-				mongoTemplate.insert(b);
+				mongoTemplate.insert(b,"bike");
 			}
 		}
 	}
@@ -218,5 +203,9 @@ public class AppTest extends TestCase {
 		System.out.println(redisTemplate);
 	}
 
+	@Test
+	public void testDataSource() throws SQLException {
+		JdbcTemplate template = new JdbcTemplate(dataSource);
+	}
 
 }

@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -18,7 +17,6 @@ import com.yc.projects.bikemanage.bean.Bike;
 import com.yc.projects.bikemanage.service.BikeManageService;
 
 @Service
-@Transactional
 public class BikeManageServiceImpl implements BikeManageService {
 	@Autowired
 	private MongoTemplate mongoTemplate;

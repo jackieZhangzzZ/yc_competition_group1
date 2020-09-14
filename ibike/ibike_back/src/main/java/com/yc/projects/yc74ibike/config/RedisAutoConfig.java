@@ -1,7 +1,7 @@
+/*
 package com.yc.projects.yc74ibike.config;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,40 +10,62 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class RedisAutoConfig {
 
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory(JedisPoolConfig jedisPool,
-			RedisClusterConfiguration jedisConfig) {
+														 RedisClusterConfiguration jedisConfig) {
 		JedisConnectionFactory factory = new JedisConnectionFactory(jedisConfig, jedisPool);
 		factory.afterPropertiesSet();
 		return factory;
 	}
 
+	@Bean   // 键[字符串]: 值[对象]
+	public RedisTemplate redsiTemplate(RedisConnectionFactory conn) {
+		RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
+		template.setConnectionFactory(conn);
+		template.afterPropertiesSet();
+		return template;
+	}
+
+	@Bean     // 键[字符串]: 值[字符串]
+	public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory conn) {
+		StringRedisTemplate template = new StringRedisTemplate();
+		template.setConnectionFactory(conn);
+		template.afterPropertiesSet();
+		return template;
+	}
+
 	@Configuration
 	public static class JedisConf {
-		@Value("${spring.redis.cluster.nodes:192.168.213.201:6379,192.168.213.202:6379,192.168.213.203:6379,192.168.213.204:6379,192.168.213.201:6380,192.168.213.202:6380}")
+		@Value("${spring.redis.cluster.nodes}")
 		private String nodes;
-		@Value("${spring.redis.cluster.max-redirects:3}")
+		@Value("${spring.redis.cluster.max-redirects}")
 		private Integer maxRedirects;
 		@Value("${spring.redis.password:}")
 		private String password;
 		@Value("${spring.redis.database:0}")
 		private Integer database;
 
-		@Value("${spring.redis.jedis.pool.max-active:8}")
+		//redis联接池相关配置
+		@Value("${spring.redis.jedis.pool.max-active}")
 		private Integer maxActive;
-		@Value("${spring.redis.jedis.pool.max-idle:8}")
+		@Value("${spring.redis.jedis.pool.max-idle}")
 		private Integer maxIdle;
-		@Value("${spring.redis.jedis.pool.max-wait:-1}")
+		@Value("${spring.redis.jedis.pool.max-wait}")
 		private Long maxWait;
-		@Value("${spring.redis.jedis.pool.min-idle:0}")
+		@Value("${spring.redis.jedis.pool.min-idle}")
 		private Integer minIdle;
 
-		@Bean
+		@Bean  //联接池的配置
 		public JedisPoolConfig jedisPool() {
 			JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 			jedisPoolConfig.setMaxIdle(maxIdle);
@@ -71,3 +93,4 @@ public class RedisAutoConfig {
 		}
 	}
 }
+*/
