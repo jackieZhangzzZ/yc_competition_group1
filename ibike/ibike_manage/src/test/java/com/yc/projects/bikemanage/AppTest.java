@@ -8,9 +8,12 @@ import java.util.Random;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -64,8 +67,12 @@ public class AppTest extends TestCase {
 	@Test
 	public void testAddAdmin() {
 		Admin admin = new Admin();
-		admin.setName("肖理达");
-		admin.setPassword("123456");
+		admin.setName("rcw");
+		/*String password = "a";
+		String salt = RandomStringUtils.randomNumeric(6,8);
+		Md5Hash md5Hash = new Md5Hash(password,salt);*/
+		admin.setPassword("123");
+		admin.setType("用户管理人员");
 		adminManageService.addAdmin(admin);
 	}
 

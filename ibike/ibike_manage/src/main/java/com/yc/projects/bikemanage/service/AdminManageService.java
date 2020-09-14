@@ -18,4 +18,6 @@ public interface AdminManageService {
 	public boolean login(Admin admin);
 	
 	public boolean logout(Admin admin);
+	
+	public Admin findAdmin(String adminname) ;
 }

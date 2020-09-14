@@ -1,6 +1,9 @@
 package com.yc.projects.bikemanage.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
+
 
 public class Admin implements Serializable {
 
@@ -10,6 +13,9 @@ public class Admin implements Serializable {
 	private String type;
 	private String name;
 	private String password;
+	
+
+	
 	public String getId() {
 		return id;
 	}
