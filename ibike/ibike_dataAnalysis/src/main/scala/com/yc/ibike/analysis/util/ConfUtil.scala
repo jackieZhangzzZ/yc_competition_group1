@@ -7,6 +7,7 @@ object ConfUtil {
   //解析配置文件
   private lazy val config: Config = ConfigFactory.load()
   val topic = config.getString("kafka.topic")
+  val topicpay = config.getString("kafka.topicpay")
   val groupId: String = config.getString("kafka.group.id")
   val redisHost: String = config.getString("redis.host")
   val selectDBIndex = config.getInt("redis.db.index")
