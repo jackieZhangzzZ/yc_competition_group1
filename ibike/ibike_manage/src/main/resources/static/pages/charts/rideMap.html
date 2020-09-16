@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/style.css"/>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=GoWI7Di6IkLEjKkzWOXaoYGdW3zcYurG"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <title>热力图功能示例</title>
+</head>
+<body>
+<div  class="page-container" id="container" style="height:580px; width:100%;"></div>
+</body>
+</html>
+
+<script type="text/javascript"
+        src="../../static/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript"
+        src="../../static/lib/jquery/jquery.cookie.js"></script>
+<script type="text/javascript">
+    var map = new BMap.Map("container");          // 创建地图实例
+    var point = new BMap.Point(116.418261, 39.921984);
+    map.centerAndZoom(point, 15);             // 初始化地图，设置中心点坐标和地图级别
+    map.enableScrollWheelZoom(); // 允许滚轮缩放
+
+    $.get("/bikemanage/map/rideMap", function(res){
+        if (res.code == 1){
+            console.log(res);
+            console.log(res.obj);
+            var points = [];
+            var obj = res.obj;
+            for (i in obj){
+                points.push({"lat":obj[i].lat, "lng":obj[i].log, "count":1});
+            }
+            console.log(points);
+            if(!isSupportCanvas()){
+                alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+            }
+
+            heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":20});
+            map.addOverlay(heatmapOverlay);
+            heatmapOverlay.setDataSet({data:points,max:100});
+            heatmapOverlay.show();
+        }else if(code == 0){
+            console.log(res.msg)
+        }
+    });
+
+    //判断浏览区是否支持canvas
+    function isSupportCanvas(){
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    }
+</script>
