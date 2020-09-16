@@ -1,12 +1,33 @@
 package com.yc.projects.bikemanage.web.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.jcraft.jsch.UserInfo;
 import com.yc.projects.bikemanage.bean.Admin;
 import com.yc.projects.bikemanage.service.AdminManageService;
 import com.yc.projects.bikemanage.web.model.JsonModel;
@@ -20,6 +41,11 @@ public class AdminManageController {
 	@ResponseBody
 	public JsonModel addUser(JsonModel jm, Admin admin) {
 		try {
+			String password = admin.getPassword();
+			String salt = RandomStringUtils.randomNumeric(6,8);
+			admin.setSalt(salt);
+			Md5Hash md5Hash = new Md5Hash(password,salt);
+			admin.setPassword(md5Hash.toString());
 			if (admin.getName() != null && !"".equals(admin.getName()) && admin.getPassword() != null
 					&& !"".equals(admin.getPassword()) && admin.getSex() != null && !"".equals(admin.getSex())
 					&& admin.getType() != null && !"".equals(admin.getType())) {
@@ -50,7 +76,7 @@ public class AdminManageController {
 			Map<String, Object> map = adminManageService.searchAdmin(admin, pageNum, pageSize);
 			jm.setCode(1);
 			jm.setObj(map.get("list"));
-			jm.setMsg(map.get("total") + "");
+			jm.setMsg(map.get("total") + "");  
 		} catch (Exception e) {
 			e.printStackTrace();
 			jm.setCode(0);
@@ -96,64 +122,51 @@ public class AdminManageController {
 		}
 		return jm;
 	}
-
-	@RequestMapping("/back/login")
+	
+	@RequestMapping("/back/adlo")
 	@ResponseBody
-	public JsonModel login(JsonModel jm, Admin admin) {
-		try {
-			if (admin.getName() != null && !"".equals(admin.getName()) && admin.getPassword() != null
-					&& !"".equals(admin.getPassword())) {
-				boolean login = adminManageService.login(admin);
-				if (login) {
-					jm.setCode(1);
-				} else {
-					jm.setCode(0);
-					jm.setMsg("用户名或密码错误");
-				}
-			} else {
-				jm.setCode(0);
-				jm.setMsg("用户名或密码不能为空");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+	public JsonModel adminLogin(JsonModel jm,Admin admin) {
+		try{
+			Subject subject = SecurityUtils.getSubject();
+			AuthenticationToken token = new UsernamePasswordToken(admin.getName(),admin.getPassword());
+			subject.login(token);
+			jm.setCode(1); 
+		}catch(UnknownAccountException e){
 			jm.setCode(0);
-			jm.setMsg(e.getMessage());
+			jm.setMsg("用户名不存在");
+		}catch(IncorrectCredentialsException e){
+			jm.setCode(0);
+			jm.setMsg("密码错误");
+		}catch(Exception e){
+			jm.setCode(0);
+			jm.setMsg("系统错误");
 		}
 		return jm;
 	}
-
-	@RequestMapping("/back/checkLogin")
+	@RequestMapping("/back/session")
 	@ResponseBody
-	public JsonModel checkLogin(JsonModel jm, Admin admin) {
-		try {
-			boolean flag = adminManageService.checkLogin(admin);
-			if (flag) {
-				jm.setCode(1);
-			} else {
-				jm.setCode(0);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			jm.setCode(0);
-		}
-		return jm;
-	}
-
+	public JsonModel  session(JsonModel jm){
+		Subject subject = SecurityUtils.getSubject();
+		List<String> roleList=new ArrayList<String>();
+	    if(subject.hasRole("admin:user")){  
+	    	roleList.add("admin:user");
+	    }  
+	    if(subject.hasRole("admin:bike")){  
+	    	roleList.add("admin:bike");
+	    }
+	    if(subject.hasRole("admin:all")){
+	    	roleList.add("admin:all");
+	    }
+	    jm.setCode(1);
+	    jm.setObj(roleList);
+	    return jm;  
+	} 
+	
 	@RequestMapping("/back/logout")
-	@ResponseBody
-	public JsonModel logout(JsonModel jm, Admin admin) {
-		try {
-			boolean flag = adminManageService.logout(admin);
-			if (flag) {
-				jm.setCode(1);
-			} else {
-				jm.setCode(0);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			jm.setCode(0);
-		}
-		return jm;
+	public String logout(JsonModel jm) {
+		Subject subject = SecurityUtils.getSubject();
+	    subject.logout();
+	    return "login";
 	}
 
 }

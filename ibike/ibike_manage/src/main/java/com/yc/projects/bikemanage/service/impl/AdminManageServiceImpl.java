@@ -129,5 +129,16 @@ public class AdminManageServiceImpl implements AdminManageService {
 		}
 		return true;
 	}
+	
+	@Override
+	public Admin findAdmin(String adminname) {
+		Query q = new Query();
+		q.addCriteria(Criteria.where("name").is(adminname));
+		List<Admin> adminlist = mongoTemplate.find(q, Admin.class,"admin");
+		if(adminlist!=null && adminlist.size()>0){
+			return adminlist.get(0);
+		}
+		return null;
+	}
 
 }
