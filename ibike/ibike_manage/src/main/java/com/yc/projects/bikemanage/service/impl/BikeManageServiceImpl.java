@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.yc.projects.bikemanage.bean.Bike;
-import com.yc.projects.bikemanage.bean.CityBean;
 import com.yc.projects.bikemanage.bean.ProvinceBean;
 import com.yc.projects.bikemanage.service.BikeManageService;
 
@@ -127,14 +126,4 @@ public class BikeManageServiceImpl implements BikeManageService {
 		return false;
 	}
 	
-	@Override
-	public Map<String,List<CityBean>> searchProvince(ProvinceBean province) {
-		Query q=new Query();
-		System.out.println(province.getProvince());
-		q.addCriteria(Criteria.where("province").is(province.getProvince()));
-		List<CityBean> list = mongoTemplate.find(q, CityBean.class,"result");
-		Map<String,List<CityBean>> map=new HashMap<String,List<CityBean>>();
-		map.put("list", list);
-		return map;
-	}
 }

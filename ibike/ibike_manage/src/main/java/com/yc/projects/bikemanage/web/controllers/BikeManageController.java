@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.yc.projects.bikemanage.bean.Bike;
-import com.yc.projects.bikemanage.bean.CityBean;
 import com.yc.projects.bikemanage.bean.ProvinceBean;
 import com.yc.projects.bikemanage.service.BikeManageService;
 import com.yc.projects.bikemanage.utils.JsonUtils;
@@ -118,19 +117,4 @@ public class BikeManageController {
 	}
 	
 	
-	@RequestMapping("/back/searchProvince")
-	@ResponseBody
-	public JsonModel searchProvince(JsonModel jm, ProvinceBean province) {
-		try {
-			Map<String, List<CityBean>> map = bikeManageService.searchProvince(province);
-			System.out.println(map+"**********");
-			jm.setObj(map.get("list"));
-			jm.setCode(1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			jm.setCode(0);
-			jm.setMsg(e.getMessage());
-		}
-		return jm;
-	}
 }

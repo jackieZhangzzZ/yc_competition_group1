@@ -50,6 +50,7 @@
 						</select>
 						</span>
 					</div>
+				
 				</div>
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2"><span
@@ -63,6 +64,8 @@
 						</select>
 						</span>
 					</div>
+					
+				
 				</div>
 				<div class="row cl">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
@@ -78,17 +81,17 @@
 							<tr class="text-c">
 								<th width="150">编号</th>
 								<th>状态</th>
-								<th>纬度</th>
-								<th>经度</th>
+								<th>省份</th>
+								<th>市区</th>
 								<th width="150">操作</th>
 							</tr>
 							<tr v-for="r in rows">
 								<td>{{r.id}}</td>
 								<td>{{r.status}}</td>
-								<td>{{r.loc[0]}}</td>
-								<td>{{r.loc[1]}}</td>
+								<td>{{r.province}}</td>
+								<td>{{r.city}}</td>
 								<td><a href="javascript:void(0)"
-									@click="upBike(r.id,r.status,r.loc[0],r.loc[1])">修改</a> <a
+									@click="upBike(r.id,r.status,r.province,r.city)">修改</a> <a
 									href="javascript:void(0)" @click="deleteBike(r.id)">删除</a></td>
 							</tr>
 						</thead>
@@ -182,12 +185,16 @@
 					}
 					var id = $("#id").val();
 					var status = $("#status").val();
+					var province =$("#province").val();
 					var pageSize = $("#pageSize").val();
+					var city=$("#city").val();
 					$.post("../../back/searchBike", {
 						bid : id,
 						status : status,
 						pageNum : pageNum,
-						pageSize : pageSize
+						pageSize : pageSize,
+						province : province,
+						city:city
 					}, function(data) {
 						vm.rows.splice(0);
 						if (data.code == 1) {
@@ -237,7 +244,10 @@
 					alert("查询失败!" + data.msg);
 				}
 			});
+			
 		})
+		
+		
 	</script>
 </body>
 </html>

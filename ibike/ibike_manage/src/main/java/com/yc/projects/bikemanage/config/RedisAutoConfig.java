@@ -25,7 +25,7 @@ public class RedisAutoConfig {
 
 	@Configuration
 	public static class JedisConf {
-		@Value("${spring.redis.cluster.nodes:192.168.254.3:6379,192.168.254.4:6379,192.168.254.5:6379,192.168.254.6:6379,192.168.254.3:6380,192.168.254.4:6380}")
+		@Value("${spring.redis.cluster.nodes:192.168.213.201:6379,192.168.213.202:6379,192.168.213.203:6379,192.168.213.204:6379,192.168.213.201:6380,192.168.213.202:6380}")
 		private String nodes;
 		@Value("${spring.redis.cluster.max-redirects:3}")
 		private Integer maxRedirects;

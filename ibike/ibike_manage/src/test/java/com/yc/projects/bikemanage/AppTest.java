@@ -67,13 +67,13 @@ public class AppTest extends TestCase {
 	@Test
 	public void testAddAdmin() {
 		Admin admin = new Admin();
-		admin.setName("容创伟");
+		admin.setName("肖理达");
 		String password = "a";
 		String salt = RandomStringUtils.randomNumeric(6,8);
 		admin.setSalt(salt);
 		Md5Hash md5Hash = new Md5Hash(password,salt);
 		admin.setPassword(md5Hash.toString());
-		admin.setType("用户管理人员");
+		admin.setType("超管");
 		adminManageService.addAdmin(admin);
 	}
 
@@ -174,15 +174,7 @@ public class AppTest extends TestCase {
 		System.out.println(b);
 	}
 
-	@Test
-	public void testSearchBike() {
-		Bike bike = new Bike();
-		bike.setBid("5ef81b7cf3837f44dcd03285");
-		bike.setStatus(3);
-		Map<String, Object> map = bikeManageService.searchBike(bike, 1, 20);
-		System.out.println(map.get("list"));
 
-	}
 
 	@Test // 准备测试数据
 	public void test1() {

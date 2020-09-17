@@ -88,9 +88,9 @@ public class AppConfig {
 	@Bean("mongoClient")
 	public MongoClient client() {
 		List<ServerAddress> list = new ArrayList<ServerAddress>();
-		ServerAddress sa1 = new ServerAddress("192.168.254.3", 23000);
-		ServerAddress sa2 = new ServerAddress("192.168.254.4", 23000);
-		ServerAddress sa3 = new ServerAddress("192.168.254.5", 23000);
+		ServerAddress sa1 = new ServerAddress("192.168.213.201", 23000);
+		ServerAddress sa2 = new ServerAddress("192.168.213.202", 23000);
+		ServerAddress sa3 = new ServerAddress("192.168.213.203", 23000);
 		list.add(sa1);
 		list.add(sa2);
 		list.add(sa3);

@@ -1,0 +1,464 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,bike-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" />
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css"
+	href="../../static/h-ui.admin/css/style.css" />
+</head>
+<body>
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		报表管理 <span class="c-gray en">&gt;</span> 财务图表 <a
+			class="btn btn-success radius r"
+			style="line-height: 1.6em; margin-top: 3px"
+			href="javascript:location.replace(location.href);" title="刷新"><i
+			class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="page-container">
+		
+		<!-- <input id="date" name="date" type="text" onclick="setday(this)" readonly="readonly" />
+		<button type="button" onclick="findBy()">查询</button> -->
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="width: 600px; height: 500px;"></div>
+		
+		<div id="main2" style="width: 600px; height: 500px;"></div>
+	</div>
+	<input id="begintime" type="text" onclick="setmonth(this)" readonly="readonly" />
+	
+
+	<script type="text/javascript"
+		src="../../static/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../../static/lib/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.min.js"></script>
+	<script type="text/javascript"
+		src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript"
+		src="../../static/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+	<script type="text/javascript"
+		src="../../static/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+	<script type="text/javascript"
+		src="../../static/lib/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript" src="../../static/lib/vue/vue.js"></script>
+	<script type="text/javascript" src="../../static/lib/vue/axios.js"></script>
+	<script type="text/javascript"
+		src="../../static/lib/jquery/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../static/lib/echarts.js"></script>
+	<script type="text/javascript" src="../../static/lib/DatePicker.js"></script>
+	<script >
+var ws= new WebSocket("ws://localhost:8201/bikemanage/websocket")
+//客户端和服务端建立链接时触发，此时可向服务端传递参数
+ws.onopen = function () {
+}
+// 客户端收到服务端发来的消息时，会触发onmessage事件，参数res.data中包含server传输过来的数据
+ws.onmessage = function (data) {
+	
+	var obj=JSON.parse(data.data);
+	console.log(obj);
+	var xs = [];
+	var ys=[];
+	var myChart = echarts.init(document.getElementById('main'));
+	var myChart2 = echarts.init(document.getElementById('main2'));
+		for(var item in obj){
+			xs.push(obj[item].x);
+			ys.push(obj[item].y);
+		}
+		var option = {
+				title : {
+					text : '财务'
+				},
+				tooltip : {},
+				legend : {
+					data : [ '金额' ]
+				},
+				xAxis : {
+					data : xs
+				},
+				yAxis : {},
+				series : [ {
+					name : '金额',
+					type : 'bar',
+					data : ys
+				} ]
+			};
+		var option2 = {
+		         // 标题
+		         title: {
+		             text: 'bbb',
+		             subtext: 'cccc'
+		         },
+		         tooltip: {
+		             trigger: 'axis',
+		 　　           		 backgroundColor: 'rgba(36, 49, 67, 0.9)',
+		         },
+		         //图例名
+		         legend: {
+		             data:['dddd']
+		         },
+		         grid: {
+		             left: '3%',   //图表距边框的距离
+		             right: '4%',
+		             bottom: '3%',
+		             containLabel: true
+		         },
+		         //工具框，可以选择
+		         toolbox: {
+		             feature: {
+		                 saveAsImage: {}
+		            }
+		         },
+		         //x轴信息样式
+		         xAxis: {
+		             type: 'category',
+		             boundaryGap: false,
+		             data: xs,
+		             //坐标轴颜色
+		             axisLine:{
+		                 lineStyle:{
+		                     color:'red'
+		                 }
+		            },
+		             //x轴文字旋转
+		             axisLabel:{
+		                 rotate:30,
+		                 interval:0
+		             },
+		         },
+		 
+		         yAxis : [
+		             {
+		                 type : 'value',
+		                 axisLabel : {
+		                     formatter: '{value} 人'
+		                 }
+		             }
+		         ],
+		         series: [
+		             //虚线
+		             {
+		                 name:'aaa',
+		                 type:'line',
+		                 symbolSize:4,   //拐点圆的大小
+		                 color:['red'],  //折线条的颜色
+		                 data:ys,
+		                 smooth:false,   //关键点，为true是不支持虚线的，实线就用true
+		                 itemStyle:{
+		                     normal:{
+		                         lineStyle:{
+		                             width:2,
+		                             type:'dotted'  //'dotted'虚线 'solid'实线
+		                         }
+		                     }
+		                 }
+		             },
+		             //实线
+		             /* {
+		                 name:'bbbb',
+		                 type:'line',
+		                 symbol:'circle',
+		                 symbolSize:4,
+		                 itemStyle:{
+		                     normal:{
+		                         color:'red',
+		                         borderColor:'red'  //拐点边框颜色
+		                     }
+		                 },
+		                 data:ys
+		             } */  
+		         ]
+		     };
+		myChart.setOption(option)
+		//myChart2.setOption(option2)
+	// 基于准备好的dom，初始化echarts实例
+  console.log('接收数据：'+data.data);
+}
+//客户端收到服务端发送的关闭连接的请求时，触发onclose事件
+ws.onclose = function () {
+  console.log('链接关闭');
+}
+//如果出现连接，处理，接收，发送数据失败的时候就会触发onerror事件
+ws.onerror = function () {
+  console.log('链接发生错误');
+}
+　　
+ </script>
+	<script type="text/javascript">
+		$(function() {
+			var name = $.cookie("adminName");
+			$.post("../../back/checkLogin", {
+				name : name
+			}, function(data) {
+				if (data.code != 1) {
+					location.replace("../login.html");
+				}
+			})
+		});
+
+		$(function() {
+			var xs = [];
+			var ys=[];
+			var myChart = echarts.init(document.getElementById('main'));
+			var myChart2 = echarts.init(document.getElementById('main2'));
+			$.post('../../back/data', function(data) {
+				for(var a=0;a<data.obj.length;a++){
+					xs.push(data.obj[a].x);
+					ys.push(data.obj[a].y)
+				}
+				var option = {
+						title : {
+							text : '财务'
+						},
+						tooltip : {},
+						legend : {
+							data : [ '金额' ]
+						},
+						xAxis : {
+							data : xs
+						},
+						yAxis : {},
+						series : [ {
+							name : '金额',
+							type : 'bar',
+							data : ys
+						} ]
+					};
+				var option2 = {
+				         // 标题
+				         title: {
+				             text: 'bbb',
+				             subtext: 'cccc'
+				         },
+				         tooltip: {
+				             trigger: 'axis',
+				 　　           		 backgroundColor: 'rgba(36, 49, 67, 0.9)',
+				         },
+				         //图例名
+				         legend: {
+				             data:['dddd']
+				         },
+				         grid: {
+				             left: '3%',   //图表距边框的距离
+				             right: '4%',
+				             bottom: '3%',
+				             containLabel: true
+				         },
+				         //工具框，可以选择
+				         toolbox: {
+				             feature: {
+				                 saveAsImage: {}
+				            }
+				         },
+				         //x轴信息样式
+				         xAxis: {
+				             type: 'category',
+				             boundaryGap: false,
+				             data: xs,
+				             //坐标轴颜色
+				             axisLine:{
+				                 lineStyle:{
+				                     color:'red'
+				                 }
+				            },
+				             //x轴文字旋转
+				             axisLabel:{
+				                 rotate:30,
+				                 interval:0
+				             },
+				         },
+				 
+				         yAxis : [
+				             {
+				                 type : 'value',
+				                 axisLabel : {
+				                     formatter: '{value} 人'
+				                 }
+				             }
+				         ],
+				         series: [
+				             //虚线
+				             {
+				                 name:'aaa',
+				                 type:'line',
+				                 symbolSize:4,   //拐点圆的大小
+				                 color:['red'],  //折线条的颜色
+				                 data:ys,
+				                 smooth:false,   //关键点，为true是不支持虚线的，实线就用true
+				                 itemStyle:{
+				                     normal:{
+				                         lineStyle:{
+				                             width:2,
+				                             type:'dotted'  //'dotted'虚线 'solid'实线
+				                         }
+				                     }
+				                 }
+				             },
+				             //实线
+				             /* {
+				                 name:'bbbb',
+				                 type:'line',
+				                 symbol:'circle',
+				                 symbolSize:4,
+				                 itemStyle:{
+				                     normal:{
+				                         color:'red',
+				                         borderColor:'red'  //拐点边框颜色
+				                     }
+				                 },
+				                 data:ys
+				             } */  
+				         ]
+				     };
+				myChart.setOption(option)
+				myChart2.setOption(option2)
+			}, 'json');
+			// 基于准备好的dom，初始化echarts实例
+			
+		})
+		/* function findBy(){
+			var date=$('#date').val()
+			var xs = [];
+			var ys=[];
+			var myChart = echarts.init(document.getElementById('main'));
+			var myChart2 = echarts.init(document.getElementById('main2'));
+			$.ajax( {
+				type:"post",
+				url:"../../back/data",
+				dataType:"json",
+				data:{
+					date:date
+				},
+				success:function(data){
+					for(var a=0;a<data.obj.length;a++){
+						xs.push(data.obj[a].x);
+						ys.push(data.obj[a].y)
+					}
+					var option = {
+							title : {
+								text : '财务'
+							},
+							tooltip : {},
+							legend : {
+								data : [ '金额' ]
+							},
+							xAxis : {
+								data : xs
+							},
+							yAxis : {},
+							series : [ {
+								name : '金额',
+								type : 'bar',
+								data : ys
+							} ]
+						};
+					var option2 = {
+					         // 标题
+					         title: {
+					             text: 'bbb',
+					             subtext: 'cccc'
+					         },
+					         tooltip: {
+					             trigger: 'axis',
+					 　　          		 backgroundColor: 'rgba(36, 49, 67, 0.9)',
+
+
+					         },
+					         //图例名
+					         legend: {
+					             data:['dddd']
+					         },
+					         grid: {
+					             left: '3%',   //图表距边框的距离
+					             right: '4%',
+					             bottom: '3%',
+					             containLabel: true
+					         },
+					         //工具框，可以选择
+					         toolbox: {
+					             feature: {
+					                 saveAsImage: {}
+					            }
+					         },
+					         //x轴信息样式
+					         xAxis: {
+					             type: 'category',
+					             boundaryGap: false,
+					             data: xs,
+					             //坐标轴颜色
+					             axisLine:{
+					                 lineStyle:{
+					                     color:'red'
+					                 }
+					            },
+					             //x轴文字旋转
+					             axisLabel:{
+					                 rotate:30,
+					                 interval:0
+					             },
+					         },
+					 
+					         yAxis : [
+					             {
+					                 type : 'value',
+					                 axisLabel : {
+					                     formatter: '{value} 人'
+					                 }
+					             }
+					         ],
+					         series: [
+					             //虚线
+					             {
+					                 name:'aaa',
+					                 type:'line',
+					                 symbolSize:4,   //拐点圆的大小
+					                 color:['red'],  //折线条的颜色
+					                 data:ys,
+					                 smooth:false,   //关键点，为true是不支持虚线的，实线就用true
+					                 itemStyle:{
+					                     normal:{
+					                         lineStyle:{
+					                             width:2,
+					                             type:'dotted'  //'dotted'虚线 'solid'实线
+					                         }
+					                     }
+					                 }
+					             },
+					             //实线
+					             /* {
+					                 name:'bbbb',
+					                 type:'line',
+					                 symbol:'circle',
+					                 symbolSize:4,
+					                 itemStyle:{
+					                     normal:{
+					                         color:'red',
+					                         borderColor:'red'  //拐点边框颜色
+					                     }
+					                 },
+					                 data:ys
+					             } */  
+					         ]
+					     }
+					myChart.setOption(option);
+					myChart2.setOption(option2);
+				}
+				
+			});
+		} */
+	</script>
+</body>
+</html>

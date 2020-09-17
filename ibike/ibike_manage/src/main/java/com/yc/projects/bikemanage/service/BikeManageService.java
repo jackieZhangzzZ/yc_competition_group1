@@ -6,7 +6,6 @@ import java.util.Map;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.yc.projects.bikemanage.bean.Bike;
-import com.yc.projects.bikemanage.bean.CityBean;
 import com.yc.projects.bikemanage.bean.ProvinceBean;
 
 
@@ -24,5 +23,4 @@ public interface BikeManageService {
 
 	public boolean updateProvince(List<ProvinceBean> list);
 	
-	public Map<String, List<CityBean>> searchProvince(ProvinceBean p);
 }
